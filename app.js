@@ -18,12 +18,13 @@ const rankof=()=>orderedPlayers().findIndex(p=>p.uid===state.uid)+1;
 const nav=()=>`<div class="topbar"><div class="brand"><span>LE GRAND JEU DES <span class="accent">COMPÉTENCES HUMAINES</span></span></div><div class="buttons"><span class="live"><span class="dot"></span>${state.demo?'MODE DÉMONSTRATION':state.remote?'MULTIJOUEUR EN DIRECT':'ÉDITION POUR LA CLASSE'}</span>${state.mode==='host'&&state.room?`<button class="btn" data-action="reset-host">NOUVELLE SALLE</button>`:''}<button class="btn ghost" data-action="home">ACCUEIL ↗</button></div></div>`;
 function errorFR(err){
   const code=String(err?.code||'');
+  const message=String(err?.message||'');
+  const details=`${code} ${message}`.toLowerCase();
   if(code.includes('network'))return 'Vérifiez votre connexion Internet, puis réessayez.';
-  if(code.includes('permission')||code.includes('PERMISSION'))return 'Accès refusé. Vérifiez les règles de la base de données Firebase.';
-  if(code.includes('operation-not-allowed'))return 'Activez l’authentification anonyme dans Firebase.';
+  if(/permission[\s_-]*denied/.test(details))return 'Accès refusé par Realtime Database. Vérifiez les règles d’accès aux salles (/rooms) dans votre projet Firebase.';
+  if(code.includes('operation-not-allowed')||details.includes('admin-restricted-operation')||details.includes('admin_only_operation'))return 'Vérifiez que l’authentification anonyme et la création de comptes sont autorisées dans Firebase.';
   if(code.includes('unauthorized-domain'))return 'Ajoutez le domaine du site aux domaines autorisés dans Firebase.';
   if(code.includes('invalid-api-key')||code.includes('invalid-app'))return 'Vérifiez la configuration de votre application Firebase.';
-  const message=String(err?.message||'');
   if(message.startsWith('Cette salle')||message.startsWith('Cette partie'))return message;
   return 'Une erreur est survenue. Vérifiez la connexion et la configuration, puis réessayez.';
 }
