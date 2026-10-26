@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#F4F9FD">
+<meta name="description" content="L’équipe en crise : un jeu pédagogique en français pour développer les compétences humaines à travers sept décisions en équipe.">
+<title>L’équipe en crise — Le grand jeu des compétences humaines</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css?v=fr1">
+</head>
+<body>
+<div id="confetti" aria-hidden="true"></div>
+<div id="app" aria-live="polite"><div class="loading">CHARGEMENT DU JEU…</div></div>
+<noscript>Activez JavaScript dans votre navigateur pour lancer le jeu.</noscript>
+<script>
+window.addEventListener('error',function(){
+  var el=document.querySelector('#app');
+  if(el&&el.querySelector('.loading')){
+    el.innerHTML='<div class="loading" style="color:#bb3453">LE JEU N’A PAS PU DÉMARRER<br><span style="font-weight:400;font-size:13px">Rechargez complètement la page (Ctrl+Maj+R). Pour un essai local, utilisez le serveur décrit dans le guide.</span></div>';
+  }
+},true);
+</script>
+<script src="config.js?v=fr1"></script>
+<script src="game-data.js?v=fr1"></script>
+<script src="media-fr.js?v=fr1"></script>
+<script type="module" src="app.js?v=fr1"></script>
+</body>
+</html>

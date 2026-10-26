@@ -1,0 +1,27 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "rooms": {
+      "$room": {
+        ".read": "auth != null",
+        ".write": "auth != null && ((!data.exists() && newData.child('owner').val() === auth.uid) || (data.exists() && data.child('owner').val() === auth.uid))",
+        ".validate": "newData.hasChildren(['owner', 'phase', 'step', 'createdAt', 'activeKey']) && newData.child('owner').isString() && newData.child('owner').val() === (data.exists() ? data.child('owner').val() : auth.uid)",
+        "players": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && !data.exists() && root.child('rooms').child($room).child('phase').val() === 'lobby'",
+            ".validate": "newData.hasChildren(['name', 'score', 'correct', 'joinedAt']) && newData.child('name').isString() && newData.child('name').val().length >= 2 && newData.child('name').val().length <= 20 && newData.child('score').isNumber() && newData.child('score').val() >= 0 && newData.child('score').val() <= 100 && newData.child('correct').isNumber() && newData.child('correct').val() >= 0 && newData.child('correct').val() <= 7"
+          }
+        },
+        "answers": {
+          "$uid": {
+            "$step": {
+              ".write": "auth != null && auth.uid === $uid && !data.exists() && root.child('rooms').child($room).child('phase').val() === 'question' && root.child('rooms').child($room).child('step').val() === newData.child('step').val() && root.child('rooms').child($room).child('players').child($uid).exists() && root.child('rooms').child($room).child('activeKey').val() === $step",
+              ".validate": "newData.hasChildren(['choice', 'step', 'sentAt']) && newData.child('choice').isString() && newData.child('choice').val().matches(/^[ABCD]$/) && newData.child('step').isNumber() && newData.child('step').val() >= 0 && newData.child('step').val() <= 6 && newData.child('sentAt').isNumber()"
+            }
+          }
+        }
+      }
+    }
+  }
+}
